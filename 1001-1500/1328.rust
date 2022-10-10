@@ -1,0 +1,19 @@
+impl Solution {
+    pub fn break_palindrome(mut palindrome: String) -> String {
+        let a = unsafe { palindrome.as_bytes_mut() };
+        if a.len() == 1 {
+            "".into()
+        } else {
+            if let Some(pos) = a
+                .iter()
+                .position(|&x| x != b'a')
+                .filter(|pos| pos * 2 + 1 != a.len())
+            {
+                a[pos] = b'a';
+            } else {
+                a[a.len() - 1] = b'b';
+            }
+            palindrome
+        }
+    }
+}
