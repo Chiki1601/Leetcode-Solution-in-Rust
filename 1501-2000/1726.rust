@@ -1,0 +1,21 @@
+use std::collections::HashMap;
+
+impl Solution {
+    pub fn tuple_same_product(nums: Vec<i32>) -> i32 {
+        let mut table:HashMap<i32, i32> = HashMap::new();
+        let mut ans:i32 = 0;
+        for i in 0..nums.len() {
+            for j in i+1..nums.len() {
+                let key:i32 = nums[i]*nums[j];
+                match table.get(&key) {
+                    Some(&x)=> {
+                        ans += x * 8;
+                        table.insert(key, x+1);
+                    }
+                    _ => {table.insert(key, 1);}
+                }
+            }
+        }
+        return ans;
+    }
+}
