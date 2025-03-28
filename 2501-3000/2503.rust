@@ -1,0 +1,39 @@
+use std::cmp::Reverse;
+use std::collections::BinaryHeap;
+
+impl Solution {
+    pub fn max_points(mut grid: Vec<Vec<i32>>, queries: Vec<i32>) -> Vec<i32> {
+        let max_q = *queries.iter().max().unwrap() as usize;
+        let mut ans = vec![0; max_q + 1];
+
+        let dir = [0, 1, 0, usize::MAX, 0];
+        let mut heap = BinaryHeap::from([(Reverse(grid[0][0]), 0usize, 0usize)]);
+        grid[0][0] = -1;
+        let mut y = 1;
+        let mut count = 0;
+        while let Some((Reverse(x), i, j)) = heap.pop() {
+            while y <= max_q.min(x as usize) {
+                ans[y] = count;
+                y += 1;
+            }
+            if y > max_q {
+                break;
+            }
+            count += 1;
+            for d in 0..4 {
+                let i2 = i.wrapping_add(dir[d]);
+                let j2 = j.wrapping_add(dir[d + 1]);
+                if i2 < grid.len() && j2 < grid[0].len()
+                && grid[i2][j2] != -1 {
+                    heap.push((Reverse(grid[i2][j2]), i2, j2));
+                    grid[i2][j2] = -1;
+                }
+            }
+        }
+        while y <= max_q {
+            ans[y] = count;
+            y += 1;
+        }
+        queries.iter().map(|&x| ans[x as usize]).collect()
+    }
+}
